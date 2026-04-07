@@ -27,8 +27,6 @@ public class JogoDoMarciano extends JFrame {
     private int numeroMarciano;
     private int tentativas;
     private int maxTentativas;
-    private int numeroMinimo;
-    private int numeroMaximo;
     private JLabel statusLabel;
     private JLabel tentativasLabel;
     private JLabel limiteLabel;
@@ -46,8 +44,6 @@ public class JogoDoMarciano extends JFrame {
         maxTentativas = DEFAULT_MAX_TENTATIVAS;
         numeroMarciano = drawNumber();
         tentativas = 0;
-        numeroMinimo = 1;
-        numeroMaximo = 100;
 
         configureLookAndFeel();
 
@@ -91,11 +87,12 @@ public class JogoDoMarciano extends JFrame {
         limiteLabel.setHorizontalAlignment(SwingConstants.CENTER);
         limiteLabel.setBorder(new EmptyBorder(0, 0, 14, 0));
 
-        inputField = new JTextField(8);
+        inputField = new JTextField(10);
         inputField.setHorizontalAlignment(JTextField.CENTER);
         inputField.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 22));
         inputField.setMaximumSize(new Dimension(220, 48));
         inputField.setPreferredSize(new Dimension(220, 48));
+        inputField.setMinimumSize(new Dimension(220, 48));
         inputField.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(80, 160, 120), 2, true),
                 BorderFactory.createEmptyBorder(8, 16, 8, 16)
@@ -258,10 +255,8 @@ public class JogoDoMarciano extends JFrame {
         tentativasLabel.setText("Tentativas: " + tentativas);
 
         if (palpite < numeroMarciano) {
-            numeroMinimo = Math.max(numeroMinimo, palpite + 1);
             setStatus("O Marciano diz: MAIOR!");
         } else if (palpite > numeroMarciano) {
-            numeroMaximo = Math.min(numeroMaximo, palpite - 1);
             setStatus("O Marciano diz: MENOR!");
         } else {
             setStatus("Parabéns! Você acertou em " + tentativas + " tentativas!");
@@ -287,8 +282,7 @@ public class JogoDoMarciano extends JFrame {
             bloquearEntrada();
         } else {
             setStatus(statusLabel.getText().replaceAll("<[^>]*>", "") +
-                    "\nFaixa provável: " + numeroMinimo + " a " + numeroMaximo +
-                    " | Restam " + (maxTentativas - tentativas) + " tentativas.");
+                    "\nRestam " + (maxTentativas - tentativas) + " tentativas.");
         }
         inputField.setText("");
         inputField.requestFocusInWindow();
@@ -297,8 +291,6 @@ public class JogoDoMarciano extends JFrame {
     private void reiniciarJogo() {
         numeroMarciano = drawNumber();
         tentativas = 0;
-        numeroMinimo = 1;
-        numeroMaximo = 100;
         tentativasLabel.setText("Tentativas: 0");
         limiteLabel.setText("Limite: " + maxTentativas + " tentativas");
         setStatus("Novo jogo! Tente adivinhar de novo.");
